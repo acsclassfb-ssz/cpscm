@@ -1,1 +1,797 @@
+<html lang="bn"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPSEM Website - Perfect Update</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans Bengali', sans-serif;
+        }
+        body {
+            overflow-x: hidden;
+            background-color: #f4f1eb;
+        }
+        /* Page Container */
+        .page {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Global Navigation Buttons */
+        .home-btn-container {
+            display: none; 
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .back-btn-container {
+            display: none; 
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .nav-btn {
+            background: rgba(26, 42, 64, 0.9);
+            color: white;
+            padding: 8px 18px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: 0.3s;
+            font-size: 14px;
+        }
+        .nav-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
 
+        /* --- 1. Home Page Styles --- */
+        #home-page {
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            padding: 80px 20px 40px 20px; /* এখানে padding-top বাড়ানো হয়েছে যাতে বাটনের সাথে ওভারল্যাপ না হয় */
+            text-align: center;
+            transition: background 0.5s ease; /* Added for smooth theme transition */
+        }
+        .top-header { font-size: 14px; color: #005c7a; margin-bottom: 5px; font-weight: 600;}
+        .main-title { font-size: 38px; color: #1a2a40; font-weight: 800; }
+        .sub-title { font-size: 20px; color: #4a69bd; font-weight: 600; margin-bottom: 30px; }
+        
+        .menu-dots {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            background: white;
+            color: #1a2a40;
+            padding: 5px 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .dropdown-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 10px 0 30px 0;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            text-align: left;
+            width: 90%;
+            max-width: 350px;
+        }
+        .dropdown-card ul { list-style: none; }
+        .dropdown-card li { 
+            margin: 10px 0; 
+            font-size: 16px; 
+            display: flex; 
+            align-items: center; 
+            color: #333;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .dropdown-card li:nth-child(1) { background: #ffeaa7; border-left: 5px solid #fdcb6e; }
+        .dropdown-card li:nth-child(2) { background: #81ecec; border-left: 5px solid #00cec9; }
+        .dropdown-card li:nth-child(3) { background: #fab1a0; border-left: 5px solid #e17055; }
+        .dropdown-card li:nth-child(4) { background: #55efc4; border-left: 5px solid #00b894; }
+        .dropdown-card li:nth-child(5) { background: #74b9ff; border-left: 5px solid #0984e3; }
+        .dropdown-card li::before { content: '👨‍🏫'; margin-right: 12px; font-size: 18px; }
+        .btn-explore {
+            background: linear-gradient(135deg, #005c7a, #008299);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0 20px 0;
+            box-shadow: 0 6px 15px rgba(0, 92, 122, 0.4);
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #d91836, #b3122c);
+            color: white;
+            padding: 10px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 40px;
+        }
+        .footer-text { font-size: 14px; color: #666; margin-top: auto; padding-bottom: 20px; font-weight: 600;}
+
+        /* --- NEW: Home Page Dark Theme Styles (Added only for the button to work) --- */
+        #home-page.dark-theme { background: linear-gradient(135deg, #101522 0%, #1a233a 100%); }
+        #home-page.dark-theme .main-title { color: #00ffff; }
+        #home-page.dark-theme .sub-title { color: #ff99ff; }
+        #home-page.dark-theme .top-header, #home-page.dark-theme .footer-text { color: #aaa; }
+        #home-page.dark-theme .menu-dots { background: #333; color: white; }
+        #home-page.dark-theme .dropdown-card { background: rgba(0, 0, 0, 0.6); border-color: rgba(0, 255, 255, 0.3); }
+        #home-page.dark-theme .dropdown-card li { color: #fff; background: rgba(255, 255, 255, 0.1); border-left-color: #00ffff; }
+        #home-page.dark-theme div[style*="color: #333"], 
+        #home-page.dark-theme div[style*="color: #444"], 
+        #home-page.dark-theme div[style*="color: #666"] { color: #ddd !important; }
+        
+        /* --- 2. Explore Page Styles --- */
+        #explore-page {
+            background: linear-gradient(135deg, #101522, #1a233a);
+            padding: 60px 10px 40px 10px;
+            min-height: 100vh;
+        }
+        .explore-title { 
+            color: #00ffff;
+            margin: 0 auto 10px auto; 
+            text-align: center; 
+            font-size: 26px; 
+            text-shadow: 0 0 10px rgba(0,255,255,0.4); 
+            border: 2px solid #00ffff;
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            background: rgba(0, 255, 255, 0.1); 
+            width: fit-content;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        @media (max-width: 500px) {
+            .grid-container { grid-template-columns: repeat(2, 1fr); }
+        }
+        .teacher-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(31, 38, 135, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .teacher-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(31, 38, 135, 0.25);
+        }
+        .tag { 
+            background: linear-gradient(135deg, #1a2a40, #2c3e50); color: white; padding: 3px 10px; 
+            border-radius: 12px; font-size: 12px; font-weight: bold; 
+            display: inline-block; margin-bottom: 10px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .img-box { 
+            width: 100%; 
+            height: 120px; 
+            background: #e1e8ed; 
+            margin: 0 auto 10px auto; 
+            border-radius: 10px; 
+            display: flex; justify-content: center; align-items: center; 
+            color: #777; overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .btn-click {
+            background: linear-gradient(to right, #4a69bd, #6a89cc);
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(74, 105, 189, 0.3);
+            transition: 0.2s;
+        }
+        .btn-click:hover { opacity: 0.9; }
+        .explore-footer { text-align: center; margin-top: 40px; font-size: 13px; color: #fff; line-height: 1.6; text-shadow: 0 1px 3px rgba(0,0,0,0.5);}
+
+        /* --- 6. Students Page Styles --- */
+        .btn-scandal {
+            background: linear-gradient(45deg, #ff007f, #ffaa00, #00ffaa, #00d4ff);
+            background-size: 300% 300%;
+            animation: gradientAnim 4s ease infinite;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 30px auto 10px auto;
+            display: block;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease;
+        }
+        .btn-scandal:hover { transform: scale(1.05); }
+
+        @keyframes gradientAnim {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #students-page {
+            background: linear-gradient(135deg, #101522, #1a233a);
+            padding: 60px 10px 40px 10px;
+            min-height: 100vh;
+        }
+        .students-title {
+            color: #ffaa00;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+        }
+        .student-grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        @media (min-width: 500px) {
+            .student-grid-container { grid-template-columns: repeat(3, 1fr); }
+        }
+        .student-img-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ff007f;
+            border-radius: 10px;
+            padding: 5px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
+            color: white;
+            font-size: 12px;
+            text-align: center;
+        }
+        .student-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        /* --- 3. Details Page Styles --- */
+        #details-page {
+            background: linear-gradient(135deg, #101522, #1a233a);
+            color: #00ffff;
+            padding: 60px 15px 40px 15px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .sci-fi-title { 
+            text-shadow: 0 0 15px #ff66ff, 0 0 5px #ff66ff; 
+            color: #ff99ff; 
+            text-align: center; 
+            margin-bottom: 15px; 
+            font-family: 'Noto Sans Bengali', sans-serif;
+            font-size: 26px;
+        }
+        
+        .big-center-photo {
+            width: 200px;
+            height: 220px;
+            margin: 0 auto 25px auto;
+            border: 3px solid cyan;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #111;
+            color: white;
+            font-family: 'Noto Sans Bengali', sans-serif;
+        }
+        .big-center-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .sci-fi-container {
+            border: 1px solid #ff9900;
+            box-shadow: 0 0 15px rgba(255, 153, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            width: 100%;
+            max-width: 500px;
+            background: rgba(0, 0, 0, 0.6);
+            margin-bottom: 20px;
+        }
+        .sci-fi-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(0, 255, 255, 0.15); padding-bottom: 5px; }
+        .sci-fi-label { color: #fff; font-family: 'Noto Sans Bengali', sans-serif; font-weight: 600; font-size: 14px;}
+        .sci-fi-value { color: #00ffff; font-size: 14px; text-align: right; flex-basis: 65%;}
+        .sci-fi-box { border: 1px solid rgba(0,255,255,0.3); padding: 10px; border-radius: 8px; margin-top: 10px; background: rgba(0,255,255,0.05);}
+        
+        .small-teacher-photo {
+             border: 1px solid cyan; 
+             width: 50px; 
+             height: 50px; 
+             border-radius: 5px; 
+             overflow: hidden; 
+             display: flex; 
+             justify-content: center; 
+             align-items: center; 
+             color: white;
+             background: #222;
+        }
+        .small-teacher-photo img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* --- 4. Login Page Styles --- */
+        #login-page {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            padding-top: 60px;
+        }
+        .login-text { 
+            text-align: center; color: #1a2a40; padding: 0 20px; 
+            margin-bottom: 30px; font-size: 16px; font-weight: 600; line-height: 1.5;
+        }
+        
+        .login-img-box {
+            background: #fff;
+            border: 4px solid #fff;
+            border-radius: 10px; 
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            color: #888;
+            font-size: 12px;
+        }
+        .login-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .admin-section {
+            background: #0d2a4a;
+            width: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            padding: 40px 20px;
+            color: white;
+            flex-grow: 1;
+        }
+        .input-group { display: flex; align-items: center; margin-bottom: 15px; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 10px;}
+        .input-group label { width: 80px; font-size: 14px; font-weight: bold;}
+        .input-group input {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            background: #fff;
+            color: #333;
+            font-weight: bold;
+        }
+        .bottom-nav { display: flex; justify-content: space-between; margin-top: 30px; font-size: 12px; font-weight: 600;}
+        .nav-item { background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+        
+        /* --- 5. Extra Page (3 dots) Styles --- */
+        #extra-page {
+            background-color: #f4f1eb;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .photo-placeholder {
+            width: 200px;
+            height: 200px;
+            background-color: #ddd;
+            border-radius: 15px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: #555;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .photo-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .audio-player {
+            margin-top: 25px;
+            width: 100%;
+            max-width: 300px;
+            outline: none;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .couple-description {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px auto 0 auto;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            font-size: 15px;
+            color: #444;
+            line-height: 1.6;
+            text-align: justify;
+            border-left: 5px solid #ff6b81; 
+        }
+    </style>
+</head>
+<body>
+    <div class="back-btn-container" id="back-btn-container">
+        <button class="nav-btn" onclick="goBack()">⬅ BACK</button>
+    </div>
+    <div class="home-btn-container" id="home-btn-container">
+        <button class="nav-btn" onclick="showPage('home-page')">🏠 HOME</button>
+    </div>
+
+    <div id="home-page" class="page">
+        <button id="theme-btn" onclick="toggleTheme()" style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); background: #1a2a40; color: white; border: none; padding: 6px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">🌙 ডার্ক মোড</button>
+
+        <div style="position: absolute; top: 4px; right: 12px; font-size: 10px; font-weight: bold; color: #fff; background: #d91836; padding: 2px 6px; border-radius: 5px; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">ক্লিক মাস্ট ↓</div>
+        <div class="menu-dots" onclick="showPage('extra-page')">⋮</div>
+        
+        <div class="top-header">Cpscm এ ভর্তি হয়ে ম্রা খাওয়া বৃন্দ</div>
+        <div class="main-title">WELCOME TO CPSCM</div>
+        <div class="sub-title">স্বাগতম আপনাকে</div>
+        <div style="font-size: 18px; margin-top: 10px; font-weight: bold; color: #333;">এখানে যে মহান স্যারদের পাবেন:</div>
+        
+        <div class="dropdown-card" id="home-list-dropdown"><ul></ul><li>T.G. স্যার</li><li>Enam স্যার</li><li>মশিউর স্যার</li><li>কাদের স্যার</li><li>G.C.D. স্যার</li></div>
+        <div style="font-size: 15px; font-weight: bold; margin: 10px 0; color: #444;">স্যারদের সম্পর্কে বিস্তারিত জানতে<br>নিচের এক্সপ্লোর বাটনে ক্লিক করুন:</div>
+        <button class="btn-explore" onclick="showPage('explore-page')">এক্সপ্লোর করুন 🚀</button>
+        
+        <div style="font-size: 16px; margin: 25px 0 10px 0; color: #666; font-weight: bold;">লগইন এ ক্লিক করো না</div>
+        <button class="btn-login" onclick="showPage('login-page')">লগইন করুন 🔒</button>
+        <div class="footer-text">© কপিরাইট ২০২৬</div>
+    </div>
+    
+    <div id="explore-page" class="page">
+        <h2 class="explore-title">আমাদের লিজেন্ড স্যারগণ</h2>
+        <p style="color: #ff99ff; font-size: 15px; margin-bottom: 20px; text-align: center; font-weight: bold; text-shadow: 0 0 8px #ff99ff;">(প্রতি ক্লিকেই আসল মজা)</p>
+        <div class="grid-container" id="teacher-grid-container">
+        </div>
+        
+        <button class="btn-scandal" onclick="showPage('students-page')">🔥 স্টুডেন্ট কেলেংকারী ফাঁস 🔥</button>
+
+        <div class="explore-footer">
+            ওয়েব সাইটটি নিছক মজা করে বানানো হয়েছে।😶<br>দয়া করে কেউ সিরিয়াসলি নেবেন না।🙏<br><br>
+            © কপিরাইট, ২০২৬ <br>Admin: নাম বললে চাকরি থাকবে না 🤫
+        </div>
+    </div>
+
+    <div id="students-page" class="page">
+        <h2 class="students-title">গোপন ছবি ফাঁস 📸</h2>
+        <div class="student-grid-container">
+            <div class="student-img-box"><img src="images/pic1.jpg" alt="স্টুডেন্ট ১" onerror="this.onerror=null;this.src='https://via.placeholder.com/150/222/fff?text=ছবি+১'"></div>
+            <div class="student-img-box"><img src="images/pic2.jpg" alt="স্টুডেন্ট ২" onerror="this.onerror=null;this.src='https://via.placeholder.com/150/222/fff?text=ছবি+২'"></div>
+            <div class="student-img-box"><img src="images/pic3.jpg" alt="স্টুডেন্ট ৩" onerror="this.onerror=null;this.src='https://via.placeholder.com/150/222/fff?text=ছবি+৩'"></div>
+            <div class="student-img-box"><img src="images/pic4.jpg" alt="স্টুডেন্ট ৪" onerror="this.onerror=null;this.src='https://via.placeholder.com/150/222/fff?text=ছবি+৪'"></div>
+            <div class="student-img-box"><img src="images/pic5.jpg" alt="স্টুডেন্ট ৫" onerror="this.onerror=null;this.src='https://via.placeholder.com/150/222/fff?text=ছবি+৫'"></div>
+            <div class="student-img-box"><img src="images/pic6.jpg" alt="স্টুডেন্ট ৬" onerror="this.onerror=null;this.src='https://via.placeholder.com/150/222/fff?text=ছবি+৬'"></div>
+        </div>
+    </div>
+    
+    <div id="details-page" class="page active">
+        <h2 class="sci-fi-title" id="details-page-title">লিজেন্ডারি ছবি : মশিউর স্যার</h2>
+        
+        <div class="big-center-photo" id="details-large-photo"><img src="https://via.placeholder.com/250/111/fff?text=🔒+বিশাল+ছবি" alt="মশিউর Sir" onerror="this.onerror=null;this.src='https://via.placeholder.com/250/111/fff?text=🔒+বিশাল+ছবি'"></div>
+        <div class="sci-fi-container" id="details-main-container">
+            <div class="sci-fi-row"><span class="sci-fi-label">নাম :</span> <span class="sci-fi-value" id="details-name">মশিউর স্যার</span></div>
+            <div class="sci-fi-row"><span class="sci-fi-label">স্ট্যাটাস :</span> <span class="sci-fi-value" id="details-status"></span></div>
+            <div class="sci-fi-row"><span class="sci-fi-label">বিখ্যাত উক্তি :</span> <span class="sci-fi-value" id="details-quote">বেশি পাকনামি করো?</span></div>
+            <div class="sci-fi-row"><span class="sci-fi-label">উদ্যোক্তা :</span> <span class="sci-fi-value" id="details-entrepreneur">ড্যাশ ড্যাশ স্পেশালিস্ট</span></div>
+            <div class="sci-fi-row"><span class="sci-fi-label">সনাক্তকারী চিহ্ন :</span> <span class="sci-fi-value" id="details-sign">বিশেষ ডায়লগ</span></div>
+        </div>
+        <div class="sci-fi-container">
+            <h3 class="sci-fi-label" style="margin-bottom: 10px; color: #ff99ff;">উক্তি বিশ্লেষণ :</h3>
+            <div class="sci-fi-value" id="details-analysis-1" style="border-bottom: 1px dashed rgba(0,255,255,0.4); margin-bottom: 8px; padding-bottom: 5px;">১. পাকনামি ধরতে ওস্তাদ</div>
+            <div class="sci-fi-value" id="details-analysis-2" style="border-bottom: 1px dashed rgba(0,255,255,0.4); margin-bottom: 8px; padding-bottom: 5px;">২. ক্লাসে হাসির রোল</div>
+            <div class="sci-fi-value" id="details-analysis-3" style="border-bottom: 1px dashed rgba(0,255,255,0.4); margin-bottom: 5px; padding-bottom: 5px;">৩. ড্যাশ ড্যাশ থিওরি</div>
+        </div>
+        <div class="sci-fi-container">
+            <h3 class="sci-fi-label" style="margin-bottom: 10px; color: #ff99ff;">পরীক্ষার হলের কার্যকলাপ :</h3>
+            <div class="sci-fi-box" style="display: flex; gap: 15px; align-items: center;">
+                <div class="small-teacher-photo" id="details-small-photo"><img src="https://via.placeholder.com/50/222/fff?text=🔒" alt="মশিউর Sir" onerror="this.onerror=null;this.src='https://via.placeholder.com/50/222/fff?text=🔒'"></div>
+                <div style="flex-grow: 1;">
+                    <div style="margin-bottom: 5px;"><span class="sci-fi-label">বিবরণ :</span> <span class="sci-fi-value" id="details-desc" style="text-align: left;">স্যারের ক্লাসে কেউ পাকনামি করলেই খবর আছে।</span></div>
+                    <div style="color: #ff9900; letter-spacing: 2px;">▂▃▅▆▇ GRAPH ▇▆▅▃▂</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="login-page" class="page">
+        <div class="login-text">
+            কি ড্যাশ পাকনামি করতে ভালো লাগে?।<br>
+            না করার পরেও যেহেতু ক্লিক করেছো<br>
+            তাহলে তুমি নিশ্চিত মশিউর স্যারের<br>
+            ভাষায় বাপের আগে ড্যাশ ড্যাশ ফেলেছো।
+        </div>
+        <div class="login-img-box">
+             <img src="images/admin_icon.jpg" alt="Admin Icon">
+        </div>
+        <div style="font-size: 20px; color: #1a2a40; font-weight: 800; margin-bottom: 15px; width: 100%; text-align: center;">
+            শুধুমাত্র এডমিনের জন্য 🛡️
+        </div>
+        <div class="admin-section">
+            <div class="input-group">
+                <label>লগইন :</label>
+                <input type="text" placeholder="ইউজারনেম (AAA)" value="">
+            </div>
+            <div class="input-group">
+                <label>পাসওয়ার্ড :</label>
+                <input type="password" placeholder="পাসওয়ার্ড (AAA)" value="">
+            </div>
+            <div class="bottom-nav">
+                <span class="nav-item">⚙️ সেটিং</span>
+                <span class="nav-item">সংরক্ষণ করুন</span>
+                <span class="nav-item">পরবর্তী ধাপ ➡️</span>
+            </div>
+        </div>
+    </div>
+    
+    <div id="extra-page" class="page">
+        <div class="photo-placeholder">
+             <img src="images/faisal_rabeya.jpg" alt="Faisal &amp; Rabeya Photo">
+        </div>
+        <h2 style="color: #1a2a40; font-weight: 800;">ফয়সাল আর রাবেয়া</h2>
+
+        <audio controls class="audio-player">
+            <source src="your-audio-file.mp3" type="audio/mpeg">
+            আপনার ব্রাউজার অডিও সাপোর্ট করে পশ্চাতে।
+        </audio>
+
+        <div class="couple-description">
+            Penging............
+        </div>
+    </div>
+    
+    <script>
+        // --- NEW: Theme Toggle Logic (Added only for the button to work) ---
+        function toggleTheme() {
+            const homePage = document.getElementById('home-page');
+            const themeBtn = document.getElementById('theme-btn');
+            homePage.classList.toggle('dark-theme');
+            
+            if (homePage.classList.contains('dark-theme')) {
+                themeBtn.innerText = '☀️ লাইট মোড';
+                themeBtn.style.background = '#f1c40f';
+                themeBtn.style.color = '#000';
+            } else {
+                themeBtn.innerText = '🌙 ডার্ক মোড';
+                themeBtn.style.background = '#1a2a40';
+                themeBtn.style.color = '#fff';
+            }
+        }
+
+        const teacherData = [
+            { 
+                id: 'tg', 
+                name: 'T.G. Sir', 
+                tag: 'T.G.', 
+                photo: 'tg_sir.jpg',
+                detailsPhoto: 'tg_sir_details.jpg',
+                status: 'চাপাবাজ টিজি',
+                quote: 'বাঘ নাই দেশে শিয়ালই হলো বাঘ!',
+                entrepreneur: 'চতুর্থ তলার কিংবদন্তি',
+                sign: 'চাপাতে অনেক জোর',
+                analysis1: '১. স্টুডেন্টদের ভয় দেখানো',
+                analysis2: '২. ক্লাসে পিন পতন নীরবতা',
+                analysis3: '৩. হোমওয়ার্ক চেক করা',
+                desc: 'স্যার যখন খাতার পাশ দিয়ে হাঁটেন, তখন হার্টবিট বেড়ে যায়।'
+            },
+            { 
+                id: 'enam', 
+                name: 'Enam Sir', 
+                tag: 'Enam', 
+                photo: 'enam_sir.jpg',
+                detailsPhoto: 'enam_sir_details.jpg',
+                status: 'ভদ্র কিন্তু ভয়ংকর 🤫',
+                quote: 'ক্লাস এ তোমার তো আবেশ লেগে যাওয়ার কথা!',
+                entrepreneur: '১০০ বছর ওয়ারেন্টির মাল্টিপ্লাগ',
+                sign: 'মাথায় চকচকে টাক 👨‍🦲',
+                analysis1: '১. সময়মত খাতা নেওয়া',
+                analysis2: '২. ল্যাবে কড়া নজরদারি',
+                analysis3: '৩. খাতা কাটার স্টাইল',
+                desc: 'পরীক্ষার হলে স্যারের এন্ট্রি মানেই সাইলেন্ট মোড।'
+            },
+            { 
+                id: 'mujahid', 
+                name: 'মশিউর স্যার', 
+                tag: 'মশিউর', 
+                photo: 'mujahid_sir.jpg',
+                detailsPhoto: 'mujahid_sir_details.jpg',
+                status: 'সংসার জীবনে অখুশি',
+                quote: 'বাপের আগে-- ফালাও?',
+                entrepreneur: 'ড্যাশ ড্যাশ স্পেশালিস্ট',
+                sign: 'ছাগলের মতো দাড়ি 🐐',
+                analysis1: '১. তোমার তো মেডিকেল আর বুয়েট কনফার্ম, শুধু সময়ের অপেক্ষা',
+                analysis2: '২.ক্লাসে কি সব ১৮+ কথা বার্তা',
+                analysis3: '৩. আরেকটুর জন্য BCS টা হলো না,নাহলে কি আমি এখানে বলদদের পড়াই?',
+                desc: 'হ্যালো,কি খবর,এক্সামে ১০০+ মার্ক তো মনে হয় নিশ্চিত তোমার(মনে মনে-ড্যাশ ড্যাশ পাবা আমার)।'
+            },
+            { 
+                id: 'kader', 
+                name: 'কাদের স্যার', 
+                tag: 'কাদের', 
+                photo: 'kader_sir.jpg',
+                detailsPhoto: 'kader_sir_details.jpg',
+                status: 'মিলিটারি কিং',
+                quote: 'ব্যাটা অপদার্থ!!!!',
+                entrepreneur: 'বাংলা ভাষায় IELTS',
+                sign: 'ডাস্টার ছুড়ে মারা',
+                analysis1: '১. বোর্ডে দ্রুত লেখা',
+                analysis2: '২. সূত্র মুখস্ত করানো',
+                analysis3: '৩. কঠিন অংক সহজ করা',
+                desc: 'অংক না পারলে ক্লাসের বাইরে দাঁড় করিয়ে রাখে।'
+            },
+            { 
+                id: 'gcd', 
+                name: 'G.C.D. Sir', 
+                tag: 'G.C.D.', 
+                photo: 'gcd_sir.jpg',
+                detailsPhoto: 'gcd_sir_details.jpg',
+                status: 'সবজান্তা শমসের 🧠',
+                quote: 'আরো পরে থাকো "মানদাতারা" আমলে',
+                entrepreneur: 'ময়মনসিংহ WI-MAX',
+                sign: 'চিরদিনের একটা ক্যাপ + মানদাতারা ল্যাপটপ',
+                analysis1: '১. সাধারণ জ্ঞানে ভরপুর',
+                analysis2: '২. কঠিন প্রশ্ন করা',
+                analysis3: '৩. বইয়ের রেফারেন্স দেওয়া',
+                desc: 'পরীক্ষার হলে কোনো কথা বলা নিষেধ।'
+            },
+            { 
+                id: 'blank', 
+                name: 'রুবিনা আজাদ', 
+                tag: 'রুবিনা', 
+                photo: 'unknown_sir.jpg',
+                detailsPhoto: 'unknown_sir_details.jpg',
+                status: 'পাগলী 🌸',
+                quote: 'এই আমি যা বলব তাই লিখবি',
+                entrepreneur: 'পাবনা পাগলা গারদ',
+                sign: 'স্যাটেলাইট এন্টেনার মতো টিপ  🔴',
+                analysis1: '১. ক্লাসের শৃঙ্খলা বজায় রাখা',
+                analysis2: '২. সবাইকে সমান চোখে দেখা',
+                analysis3: '৩. সুন্দর করে বোঝানো',
+                desc: 'পরীক্ষার হলে সবাই একদম চুপচাপ থাকে।'
+            } 
+        ];
+
+        let pageHistory = [];
+        let currentPageId = 'home-page';
+
+        function loadHomeListData() {
+            const dropdown = document.getElementById('home-list-dropdown');
+            dropdown.innerHTML = '<ul>';
+            teacherData.slice(0, 5).forEach(teacher => {
+                dropdown.innerHTML += `<li>${teacher.tag} স্যার</li>`;
+            });
+            dropdown.innerHTML += '</ul>';
+        }
+
+        function loadExploreGridData() {
+            const container = document.getElementById('teacher-grid-container');
+            container.innerHTML = ''; 
+            teacherData.forEach(teacher => {
+                const imgBoxContent = `<img src="images/${teacher.photo}" alt="${teacher.tag} Sir" onerror="this.onerror=null;this.src='https://via.placeholder.com/200/e1e8ed/777?text=বড়+ছবি'">`;
+                container.innerHTML += `
+                    <div class="teacher-card">
+                        <div class="tag">${teacher.tag}</div>
+                        <div class="img-box">${imgBoxContent}</div>
+                        <div style="font-size: 13px; font-weight: bold; color:#444;">${teacher.name}</div>
+                        <button class="btn-click" onclick="loadTeacherDetails('${teacher.id}')">ক্লিক করুন</button>
+                    </div>
+                `;
+            });
+        }
+
+        function loadTeacherDetails(teacherId) {
+            const teacher = teacherData.find(t => t.id === teacherId);
+            
+            if (teacher) {
+                const largePhoto = document.getElementById('details-large-photo');
+                largePhoto.innerHTML = `<img src="images/${teacher.detailsPhoto}" alt="${teacher.tag} Sir" onerror="this.onerror=null;this.src='https://via.placeholder.com/250/111/fff?text=🔒+বিশাল+ছবি'">`;
+                
+                document.getElementById('details-name').innerText = teacher.name; 
+                document.getElementById('details-status').innerText = teacher.status;
+                document.getElementById('details-quote').innerText = teacher.quote;
+                document.getElementById('details-entrepreneur').innerText = teacher.entrepreneur;
+                document.getElementById('details-sign').innerText = teacher.sign;
+                
+                document.getElementById('details-analysis-1').innerText = teacher.analysis1;
+                document.getElementById('details-analysis-2').innerText = teacher.analysis2;
+                document.getElementById('details-analysis-3').innerText = teacher.analysis3;
+                
+                document.getElementById('details-desc').innerText = teacher.desc;
+
+                const smallPhoto = document.getElementById('details-small-photo');
+                smallPhoto.innerHTML = `<img src="images/${teacher.detailsPhoto}" alt="${teacher.tag} Sir" onerror="this.onerror=null;this.src='https://via.placeholder.com/50/222/fff?text=🔒'">`;
+                document.getElementById('details-page-title').innerText = `লিজেন্ডারি ছবি : ${teacher.name}`;
+                showPage('details-page');
+            }
+        }
+
+        function showPage(pageId, isBack = false) {
+            if (!isBack && currentPageId !== pageId) {
+                pageHistory.push(currentPageId);
+            }
+
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            currentPageId = pageId;
+
+            const homeBtnContainer = document.getElementById('home-btn-container');
+            const backBtnContainer = document.getElementById('back-btn-container');
+
+            if (pageId === 'home-page') {
+                homeBtnContainer.style.display = 'none'; 
+                backBtnContainer.style.display = 'none';
+                pageHistory = []; 
+            } else {
+                homeBtnContainer.style.display = 'block'; 
+                backBtnContainer.style.display = 'block'; 
+            }
+            
+            window.scrollTo(0, 0);
+        }
+
+        function goBack() {
+            if (pageHistory.length > 0) {
+                const prevPage = pageHistory.pop();
+                showPage(prevPage, true);
+            } else {
+                showPage('home-page');
+            }
+        }
+
+        loadHomeListData();
+        loadExploreGridData();
+        showPage('home-page');
+    </script>
+</body>
+</html>
